@@ -1,14 +1,24 @@
+import { ErrorComponent } from '#/components/layout/ErrorComponent'
+import { FeaturedAuctions } from '#/components/home/FeaturedAuctions'
+import { HeroSection } from '#/components/home/HeroSection'
+import { featuredPiecesQueryOptions } from '#/queries/piecesQueries'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({ component: Home })
+export const Route = createFileRoute('/')({
+  loader: ({ context: { queryClient } }) => {
+    const pieces = queryClient.ensureQueryData(featuredPiecesQueryOptions)
+    return pieces
+  },
+  errorComponent: ErrorComponent,
+  component: Home,
+})
 
 function Home() {
+  const featuredPieces = Route.useLoaderData()
   return (
-    <div className="p-8">
-      <h1 className="text-4xl font-bold">Welcome to TanStack Start</h1>
-      <p className="mt-4 text-lg">
-        Edit <code>src/routes/index.tsx</code> to get started.
-      </p>
-    </div>
+    <main className="h-svh w-full flex flex-col justify-between overflow-hidden bg-background text-foreground">
+      <HeroSection />
+      <FeaturedAuctions pieces={featuredPieces} />
+    </main>
   )
 }
