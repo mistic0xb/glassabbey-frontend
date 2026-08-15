@@ -4,8 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { authQueryOptions } from '#/queries/authQueries'
 import { loginWithNostr, logout } from '#/api/auth'
 
-interface AuthContextType {
-  user?: UserProfile | null
+export interface AuthContextType {
+  user: UserProfile | null
   isAuthenticated: boolean
   isLoading: boolean
   login: () => Promise<{ ok: boolean; error?: string }>
@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // 1. Session Query
   const { data: user = null, isLoading } = useQuery(authQueryOptions)
-  console.log('session query')
 
   // 2. Login Mutation
   const loginMutation = useMutation({
