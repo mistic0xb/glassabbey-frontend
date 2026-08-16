@@ -1,3 +1,4 @@
+import type { UserProfile } from "#/types/api";
 import { DEFAULT_RELAYS, getPool } from "./pool";
 
 // Fetch user profile (kind 0)
