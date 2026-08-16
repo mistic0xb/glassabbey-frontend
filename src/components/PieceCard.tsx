@@ -1,4 +1,5 @@
-import { ExternalLink, Tag } from 'lucide-react'
+import { ExternalLink, Tag, Gavel } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
 export type PieceData = {
   id: string
@@ -106,6 +107,19 @@ export function PieceCard({ piece, actions, onClick }: PieceCardProps) {
               SATS
             </span>
           </div>
+        </div>
+
+        {/* Join Bidding button */}
+        <div className="mt-3 pt-1">
+          <Link
+            to="/auction/$pieceId"
+            params={{ pieceId: piece.id }}
+            onClick={(e) => e.stopPropagation()}
+            className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600  px-3 py-2 text-xs font-bold transition-all shadow-xs"
+          >
+            <Gavel className="h-3.5 w-3.5" />
+            <span>Join Bidding</span>
+          </Link>
         </div>
       </div>
     </div>
