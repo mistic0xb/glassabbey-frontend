@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import {
   useGalleryDetail,
   usePublishGallery,
   useCloseGallery,
 } from '#/queries/galleryQueries'
+import { PieceCard } from '#/components/PieceCard'
 import {
   ArrowLeft,
   Loader2,
@@ -11,7 +13,14 @@ import {
   CheckCircle,
   Plus,
   AlertTriangle,
+  Trash2,
+  Pencil,
+  Calendar,
 } from 'lucide-react'
+import { useDeletePiece, useGalleryPieces } from '#/queries/piecesQueries'
+import { PieceModal } from '#/components/dashboard/PieceModal'
+import type { PieceResponse } from '#/types/api'
+import formatDate from '#/lib/formatDate'
 
 export const Route = createFileRoute('/creator/_auth/gallery/$galleryId')({
   component: GalleryDetailPage,
@@ -19,12 +28,27 @@ export const Route = createFileRoute('/creator/_auth/gallery/$galleryId')({
 
 function GalleryDetailPage() {
   const { galleryId } = Route.useParams()
-  const { data: gallery, isLoading, isError } = useGalleryDetail(galleryId)
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [selectedPiece, setSelectedPiece] = useState<PieceResponse | null>(null)
+
+  const {
+    data: gallery,
+    isLoading: isGalleryLoading,
+    isError: isGalleryError,
+  } = useGalleryDetail(galleryId)
+  const { data: pieces = [], isLoading: isPiecesLoading } =
+    useGalleryPieces(galleryId)
 
   const publishMutation = usePublishGallery()
   const closeMutation = useCloseGallery()
+  const deletePieceMutation = useDeletePiece(galleryId)
 
-  if (isLoading) {
+  const handleCloseModal = () => {
+    setIsAddModalOpen(false)
+    setSelectedPiece(null)
+  }
+
+  if (isGalleryLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -32,7 +56,7 @@ function GalleryDetailPage() {
     )
   }
 
-  if (isError || !gallery) {
+  if (isGalleryError || !gallery) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
         <AlertTriangle className="h-10 w-10 text-destructive mb-3" />
@@ -67,13 +91,24 @@ function GalleryDetailPage() {
               </span>
               <span className="text-xs text-muted-foreground flex items-center gap-1">
                 <Layers className="h-3.5 w-3.5" />
-                {gallery.pieceCount || 0} Pieces
+                {pieces.length} Pieces
               </span>
             </div>
-            <h1 className="text-2xl font-extrabold">{gallery.title}</h1>
-            <p className="text-xs text-muted-foreground mt-1 max-w-2xl">
+            <h1 className="text-3xl font-extrabold">{gallery.title}</h1>
+            <p className="text-xm text-muted-foreground mt-1 max-w-2xl">
               {gallery.description || 'No description added yet.'}
             </p>
+
+            <div className="flex items-center gap-1.5 text-xm text-muted-foreground mt-4">
+              <Calendar className="h-3.5 w-3.5" />
+              <span>
+                {gallery.status === 'PUBLISHED'
+                  ? `Ends: ${formatDate(gallery.endAt)}`
+                  : gallery.status === 'DRAFT'
+                    ? `Created: ${formatDate(gallery.createdAt)}`
+                    : `Ended: ${formatDate(gallery.endAt || gallery.updatedAt)}`}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-3 border-t border-border/60 pt-4 md:border-t-0 md:pt-0">
@@ -107,29 +142,85 @@ function GalleryDetailPage() {
           </div>
         </div>
 
-        {/* Art Pieces Management Grid Placeholder */}
+        {/* Art Pieces Section */}
         <div className="rounded-xl border border-border bg-card/40 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold">Art Pieces</h2>
+            <h2 className="text-lg font-bold">Art Pieces ({pieces.length})</h2>
             {gallery.status === 'DRAFT' && (
-              <button className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/60 px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer">
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/60 px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-secondary transition-colors cursor-pointer"
+              >
                 <Plus className="h-4 w-4" />
                 Add Piece
               </button>
             )}
           </div>
 
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center">
-            <Layers className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm font-semibold">
-              No pieces added to this gallery
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Upload artwork via Blossom and set piece details.
-            </p>
-          </div>
+          {isPiecesLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : pieces.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-border py-12 text-center">
+              <Layers className="h-8 w-8 text-muted-foreground mb-2" />
+              <p className="text-sm font-semibold">
+                No pieces added to this gallery
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Upload artwork via Blossom or URL and set piece details.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {pieces.map((piece) => (
+                <PieceCard
+                  key={piece.id}
+                  piece={piece}
+                  actions={
+                    gallery.status === 'DRAFT' && (
+                      <div className="flex items-center gap-1.5">
+                        {/* Edit btn  */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setSelectedPiece(piece)
+                            setIsAddModalOpen(true)
+                          }}
+                          className="rounded-md bg-background/80 p-1.5 text-foreground hover:bg-accent backdrop-blur-md transition-colors"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+
+                        {/* Delete btn */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            deletePieceMutation.mutate(piece.id)
+                          }}
+                          className="rounded-md bg-background/80 p-1.5 text-destructive hover:bg-destructive hover:text-white backdrop-blur-md transition-colors"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    )
+                  }
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Piece Modal (Create/Edit) */}
+      <PieceModal
+        galleryId={galleryId}
+        pieceToEdit={selectedPiece}
+        isOpen={isAddModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   )
 }

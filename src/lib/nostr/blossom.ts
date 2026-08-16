@@ -1,6 +1,6 @@
 import { generateSecretKey, finalizeEvent } from "nostr-tools";
 
-const MEDIA_SERVER = "https://mibo.eu.nostria.app";
+const MEDIA_SERVER = "https://blossom.nostr.build";
 
 export async function uploadToBlossom(
   file: File,

@@ -5,14 +5,7 @@ export type UserProfile = {
   about?: string | null
 }
 
-export type PieceDto = {
-  id: string
-  title: string
-  description: string
-  imgUrl: string
-  basePriceSats: string
-}
-
+// Gallery
 export type GalleryDto = {
   id: string
   creatorId: string
@@ -37,4 +30,39 @@ export type UpdateGalleryRequest = {
   title?: string
   description?: string
   endAt?: string
+}
+
+// Piece
+export type PieceDto = {
+  id: string
+  title: string
+  description: string
+  imgUrl: string
+  basePriceSats: string
+}
+
+export type PiecePayload = {
+  title: string
+  description: string
+  artistName: string
+  artistProfile?: string
+  medium?: string
+  dimensions?: string
+  imgUrl?: string
+  basePriceSats: number
+}
+
+export type PieceResponse = {
+  id: string
+  galleryId: string
+  title: string
+  description: string
+  artistName: string
+  artistProfile?: string
+  medium?: string
+  dimensions?: string
+  imgUrl?: string
+  basePriceSats: number
+  createdAt: string
+  updatedAt: string
 }
