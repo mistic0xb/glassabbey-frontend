@@ -83,62 +83,80 @@ function GalleryDetailPage() {
         </Link>
 
         {/* Gallery Action Header */}
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between rounded-xl border border-border bg-card/80 p-6 mb-8 backdrop-blur-sm">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-0.5 text-xs font-semibold text-primary uppercase">
-                {gallery.status}
-              </span>
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <Layers className="h-3.5 w-3.5" />
-                {pieces.length} Pieces
-              </span>
+        <div className="relative overflow-hidden rounded-xl border border-border bg-card/80 mb-8 backdrop-blur-sm">
+          {/* Cover Image Background Banner with Shading Gradients */}
+          {gallery.coverImageUrl ? (
+            <div className="absolute inset-0 z-0">
+              <img
+                src={gallery.coverImageUrl}
+                alt={gallery.title}
+                className="h-full w-full object-cover object-center opacity-25 filter blur-xs scale-105"
+              />
+              {/* Dark shading gradient overlay to ensure perfect text contrast */}
+              <div className="absolute inset-0 bg-linear-to-r from-card via-card/95 to-card/70" />
             </div>
-            <h1 className="text-3xl font-extrabold">{gallery.title}</h1>
-            <p className="text-xm text-muted-foreground mt-1 max-w-2xl">
-              {gallery.description || 'No description added yet.'}
-            </p>
+          ) : (
+            <div className="absolute inset-0 z-0 bg-linear-to-r from-card via-card/90 to-card/60" />
+          )}
 
-            <div className="flex items-center gap-1.5 text-xm text-muted-foreground mt-4">
-              <Calendar className="h-3.5 w-3.5" />
-              <span>
-                {gallery.status === 'PUBLISHED'
-                  ? `Ends: ${formatDate(gallery.endAt)}`
-                  : gallery.status === 'DRAFT'
-                    ? `Created: ${formatDate(gallery.createdAt)}`
-                    : `Ended: ${formatDate(gallery.endAt || gallery.updatedAt)}`}
-              </span>
+          {/* Set relative and z-10 so inner elements layer over background banner */}
+          <div className="relative z-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between p-6 sm:p-8">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-0.5 text-xs font-semibold text-primary uppercase">
+                  {gallery.status}
+                </span>
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Layers className="h-3.5 w-3.5" />
+                  {pieces.length} Pieces
+                </span>
+              </div>
+              <h1 className="text-3xl font-extrabold tracking-tight">{gallery.title}</h1>
+              <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
+                {gallery.description || 'No description added yet.'}
+              </p>
+
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-4">
+                <Calendar className="h-3.5 w-3.5" />
+                <span>
+                  {gallery.status === 'PUBLISHED'
+                    ? `Ends: ${formatDate(gallery.endAt)}`
+                    : gallery.status === 'DRAFT'
+                      ? `Created: ${formatDate(gallery.createdAt)}`
+                      : `Ended: ${formatDate(gallery.endAt || gallery.updatedAt)}`}
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-center gap-3 border-t border-border/60 pt-4 md:border-t-0 md:pt-0">
-            {gallery.status === 'DRAFT' && (
-              <button
-                onClick={() => publishMutation.mutate(gallery.id)}
-                disabled={publishMutation.isPending}
-                className="inline-flex items-center gap-2 rounded-lg bg-bid px-4 py-2.5 text-xs font-semibold text-bid-foreground hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shadow-md"
-              >
-                {publishMutation.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <CheckCircle className="h-4 w-4" />
-                )}
-                Publish Collection
-              </button>
-            )}
+            <div className="flex items-center gap-3 border-t border-border/60 pt-4 md:border-t-0 md:pt-0">
+              {gallery.status === 'DRAFT' && (
+                <button
+                  onClick={() => publishMutation.mutate(gallery.id)}
+                  disabled={publishMutation.isPending}
+                  className="inline-flex items-center gap-2 rounded-lg bg-bid px-4 py-2.5 text-xs font-semibold text-bid-foreground hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shadow-md"
+                >
+                  {publishMutation.isPending ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <CheckCircle className="h-4 w-4" />
+                  )}
+                  Publish Collection
+                </button>
+              )}
 
-            {gallery.status === 'PUBLISHED' && (
-              <button
-                onClick={() => closeMutation.mutate(gallery.id)}
-                disabled={closeMutation.isPending}
-                className="inline-flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-xs font-semibold text-destructive hover:bg-destructive/20 transition-colors disabled:opacity-50 cursor-pointer"
-              >
-                {closeMutation.isPending && (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                )}
-                Close Gallery
-              </button>
-            )}
+              {gallery.status === 'PUBLISHED' && (
+                <button
+                  onClick={() => closeMutation.mutate(gallery.id)}
+                  disabled={closeMutation.isPending}
+                  className="inline-flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-xs font-semibold text-destructive hover:bg-destructive/20 transition-colors disabled:opacity-50 cursor-pointer"
+                >
+                  {closeMutation.isPending && (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  )}
+                  Close Gallery
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -180,7 +198,7 @@ function GalleryDetailPage() {
                   actions={
                     gallery.status === 'DRAFT' && (
                       <div className="flex items-center gap-1.5">
-                        {/* Edit btn  */}
+                        {/* Edit btn */}
                         <button
                           type="button"
                           onClick={(e) => {
