@@ -44,7 +44,7 @@ export function useDeletePiece(galleryId: string) {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: (pieceId: string) => deletePiece(pieceId),
+        mutationFn: (pieceId: string) => deletePiece(galleryId, pieceId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: pieceKeys.gallery(galleryId) })
             queryClient.invalidateQueries({ queryKey: ['gallery', galleryId] })
