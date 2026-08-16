@@ -12,10 +12,11 @@ export type GalleryDto = {
   creatorName: string
   title: string
   description: string
+  coverImageUrl?: string | null
   pieceCount: number
   status: 'DRAFT' | 'PUBLISHED' | 'CLOSED'
   publishedAt?: string
-  endAt?: string
+  endAt: string
   createdAt: string
   updatedAt: string
 }
@@ -23,12 +24,14 @@ export type GalleryDto = {
 export type CreateGalleryRequest = {
   title: string
   description: string
+  coverImageUrl?: string
   endAt?: string
 }
 
 export type UpdateGalleryRequest = {
   title?: string
   description?: string
+  coverImageUrl?: string
   endAt?: string
 }
 
