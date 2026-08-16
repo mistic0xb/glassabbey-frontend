@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, queryOptions } from '@tanstack/react-query'
 import {
   fetchCreatorGalleries,
   fetchPublishedGalleries,
@@ -17,20 +17,25 @@ export const galleryKeys = {
   detail: (id: string) => [...galleryKeys.all, 'detail', id] as const,
 }
 
+export const publishedGalleriesQueryOptions = () =>
+  queryOptions({
+    queryKey: ['galleries', 'public'],
+    queryFn: fetchPublishedGalleries,
+    staleTime: 1000 * 60 * 5, // 5 minutes fresh time
+  })
+
 // Creator dashboard hook 
 export function useCreatorGalleries() {
   return useQuery({
     queryKey: galleryKeys.creator(),
     queryFn: fetchCreatorGalleries,
+    staleTime: 1000 * 60 * 30 // 30 mins
   })
 }
 
 // Public explore page hook 
 export function usePublishedGalleries() {
-  return useQuery({
-    queryKey: galleryKeys.public(),
-    queryFn: fetchPublishedGalleries,
-  })
+  return useQuery(publishedGalleriesQueryOptions());
 }
 
 export function useGalleryDetail(id: string) {
