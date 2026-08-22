@@ -16,6 +16,6 @@ export async function updatePiece(galleryId: string, pieceId: string, payload: P
     return data
 }
 
-export async function deletePiece(pieceId: string): Promise<void> {
-    await client.delete(`/piece/${pieceId}`)
+export async function deletePiece(galleryId: string, pieceId: string): Promise<void> {
+    await client.delete(`/galley/${galleryId}/piece/${pieceId}`)
 }
