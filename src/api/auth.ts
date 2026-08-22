@@ -1,5 +1,6 @@
 import { fetchProfile } from "#/lib/nostr/fetchProfile"
 import { getPublicKey, hasNostrExtension } from "#/lib/nostr/nostrAuth"
+import type { UserProfile } from "#/types/api";
 import client from "./client"
 
 // Fetcher for session verification
