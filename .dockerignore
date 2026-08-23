@@ -1,0 +1,21 @@
+# Dependencies & Build Output (Forces clean build inside Docker)
+node_modules
+dist
+build
+.pnpm-store
+
+# Environment & Secret Files
+.env
+.env.*
+
+# IDE & Editor Configuration
+.vscode
+
+# Logs & OS Specific
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
