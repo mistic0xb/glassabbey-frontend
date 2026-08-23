@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useCreatorGalleries, usePublishGallery, useCloseGallery } from '#/queries/galleryQueries'
-import { Plus, Loader2, ImageOff } from 'lucide-react'
+import {
+  useCreatorGalleries,
+  usePublishGallery,
+  useCloseGallery,
+} from '#/queries/galleryQueries'
+import { Plus, Loader2, ImageOff, Wallet } from 'lucide-react'
 import { CreatorStats } from '#/components/dashboard/CreatorStats'
 import { GalleryCard } from '#/components/dashboard/GalleryCard'
 
@@ -14,7 +18,9 @@ function CreatorDashboard() {
   const publishMutation = usePublishGallery()
   const closeMutation = useCloseGallery()
 
-  const [activeTab, setActiveTab] = useState<'ALL' | 'PUBLISHED' | 'DRAFT' | 'CLOSED'>('ALL')
+  const [activeTab, setActiveTab] = useState<
+    'ALL' | 'PUBLISHED' | 'DRAFT' | 'CLOSED'
+  >('ALL')
 
   const filteredGalleries = galleries.filter((g) => {
     if (activeTab === 'ALL') return true
@@ -27,19 +33,31 @@ function CreatorDashboard() {
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight">Creator Dashboard</h1>
+            <h1 className="text-3xl font-extrabold tracking-tight">
+              Creator Dashboard
+            </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Manage your art collections, monitor auctions, and release new pieces.
+              Manage your art collections, monitor auctions, and release new
+              pieces.
             </p>
           </div>
 
-          <Link
-            to="/creator/gallery/new"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity shadow-md shadow-primary/20"
-          >
-            <Plus className="h-4 w-4" />
-            Create New Gallery
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              to="/creator/gallery/new"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity shadow-md shadow-primary/20"
+            >
+              <Plus className="h-4 w-4" />
+              Create New Gallery
+            </Link>
+            <Link
+              to="/creator/nwc"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-secondary/50 px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-secondary transition-colors"
+            >
+              <Wallet className="h-4 w-4" />
+              Manage NWC
+            </Link>
+          </div>
         </div>
 
         {/* Stats */}
@@ -59,7 +77,9 @@ function CreatorDashboard() {
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              {tab === 'ALL' ? 'All Collections' : tab.charAt(0) + tab.slice(1).toLowerCase()}
+              {tab === 'ALL'
+                ? 'All Collections'
+                : tab.charAt(0) + tab.slice(1).toLowerCase()}
             </button>
           ))}
         </div>
@@ -71,7 +91,9 @@ function CreatorDashboard() {
           </div>
         ) : isError ? (
           <div className="rounded-xl border border-destructive/20 bg-destructive/5 p-8 text-center">
-            <p className="text-sm text-destructive">Failed to load galleries. Please try refreshing.</p>
+            <p className="text-sm text-destructive">
+              Failed to load galleries. Please try refreshing.
+            </p>
           </div>
         ) : filteredGalleries.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
@@ -102,7 +124,9 @@ function CreatorDashboard() {
                 gallery={gallery}
                 onPublish={(id) => publishMutation.mutate(id)}
                 onClose={(id) => closeMutation.mutate(id)}
-                isActionPending={publishMutation.isPending || closeMutation.isPending}
+                isActionPending={
+                  publishMutation.isPending || closeMutation.isPending
+                }
               />
             ))}
           </div>
