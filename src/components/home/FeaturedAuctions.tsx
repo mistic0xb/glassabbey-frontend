@@ -5,9 +5,10 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel'
+import type { PieceDto } from '#/types/api'
 
 interface FeaturedAuctionsProps {
-  pieces?: Piece[]
+  pieces?: PieceDto[]
 }
 
 export function FeaturedAuctions({ pieces = [] }: FeaturedAuctionsProps) {
