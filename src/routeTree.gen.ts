@@ -10,33 +10,138 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CreatorRouteRouteImport } from './routes/creator/route'
+import { Route as AuctionPieceIdRouteImport } from './routes/auction/$pieceId'
+import { Route as ExploreIndexRouteImport } from './routes/explore/index'
+import { Route as ExploreGalleryIdRouteImport } from './routes/explore/$galleryId'
+import { Route as CreatorAuthDashboardRouteImport } from './routes/creator/_auth/dashboard'
+import { Route as CreatorAuthNwcRouteImport } from './routes/creator/_auth/nwc'
+import { Route as CreatorAuthGalleryGalleryIdRouteImport } from './routes/creator/_auth/gallery/$galleryId'
+import { Route as CreatorAuthGalleryNewRouteImport } from './routes/creator/_auth/gallery/new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CreatorRouteRoute = CreatorRouteRouteImport.update({
+  id: '/creator',
+  path: '/creator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuctionPieceIdRoute = AuctionPieceIdRouteImport.update({
+  id: '/auction/$pieceId',
+  path: '/auction/$pieceId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreIndexRoute = ExploreIndexRouteImport.update({
+  id: '/explore/',
+  path: '/explore/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreGalleryIdRoute = ExploreGalleryIdRouteImport.update({
+  id: '/explore/$galleryId',
+  path: '/explore/$galleryId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorAuthDashboardRoute = CreatorAuthDashboardRouteImport.update({
+  id: '/_auth/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => CreatorRouteRoute,
+} as any)
+const CreatorAuthNwcRoute = CreatorAuthNwcRouteImport.update({
+  id: '/_auth/nwc',
+  path: '/nwc',
+  getParentRoute: () => CreatorRouteRoute,
+} as any)
+const CreatorAuthGalleryGalleryIdRoute =
+  CreatorAuthGalleryGalleryIdRouteImport.update({
+    id: '/_auth/gallery/$galleryId',
+    path: '/gallery/$galleryId',
+    getParentRoute: () => CreatorRouteRoute,
+  } as any)
+const CreatorAuthGalleryNewRoute = CreatorAuthGalleryNewRouteImport.update({
+  id: '/_auth/gallery/new',
+  path: '/gallery/new',
+  getParentRoute: () => CreatorRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/creator': typeof CreatorRouteRouteWithChildren
+  '/auction/$pieceId': typeof AuctionPieceIdRoute
+  '/explore/$galleryId': typeof ExploreGalleryIdRoute
+  '/explore/': typeof ExploreIndexRoute
+  '/creator/dashboard': typeof CreatorAuthDashboardRoute
+  '/creator/nwc': typeof CreatorAuthNwcRoute
+  '/creator/gallery/$galleryId': typeof CreatorAuthGalleryGalleryIdRoute
+  '/creator/gallery/new': typeof CreatorAuthGalleryNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/creator': typeof CreatorRouteRouteWithChildren
+  '/auction/$pieceId': typeof AuctionPieceIdRoute
+  '/explore/$galleryId': typeof ExploreGalleryIdRoute
+  '/explore': typeof ExploreIndexRoute
+  '/creator/dashboard': typeof CreatorAuthDashboardRoute
+  '/creator/nwc': typeof CreatorAuthNwcRoute
+  '/creator/gallery/$galleryId': typeof CreatorAuthGalleryGalleryIdRoute
+  '/creator/gallery/new': typeof CreatorAuthGalleryNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/creator': typeof CreatorRouteRouteWithChildren
+  '/auction/$pieceId': typeof AuctionPieceIdRoute
+  '/explore/$galleryId': typeof ExploreGalleryIdRoute
+  '/explore/': typeof ExploreIndexRoute
+  '/creator/_auth/dashboard': typeof CreatorAuthDashboardRoute
+  '/creator/_auth/nwc': typeof CreatorAuthNwcRoute
+  '/creator/_auth/gallery/$galleryId': typeof CreatorAuthGalleryGalleryIdRoute
+  '/creator/_auth/gallery/new': typeof CreatorAuthGalleryNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/creator'
+    | '/auction/$pieceId'
+    | '/explore/$galleryId'
+    | '/explore/'
+    | '/creator/dashboard'
+    | '/creator/nwc'
+    | '/creator/gallery/$galleryId'
+    | '/creator/gallery/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/creator'
+    | '/auction/$pieceId'
+    | '/explore/$galleryId'
+    | '/explore'
+    | '/creator/dashboard'
+    | '/creator/nwc'
+    | '/creator/gallery/$galleryId'
+    | '/creator/gallery/new'
+  id:
+    | '__root__'
+    | '/'
+    | '/creator'
+    | '/auction/$pieceId'
+    | '/explore/$galleryId'
+    | '/explore/'
+    | '/creator/_auth/dashboard'
+    | '/creator/_auth/nwc'
+    | '/creator/_auth/gallery/$galleryId'
+    | '/creator/_auth/gallery/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreatorRouteRoute: typeof CreatorRouteRouteWithChildren
+  AuctionPieceIdRoute: typeof AuctionPieceIdRoute
+  ExploreGalleryIdRoute: typeof ExploreGalleryIdRoute
+  ExploreIndexRoute: typeof ExploreIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +153,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/creator': {
+      id: '/creator'
+      path: '/creator'
+      fullPath: '/creator'
+      preLoaderRoute: typeof CreatorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auction/$pieceId': {
+      id: '/auction/$pieceId'
+      path: '/auction/$pieceId'
+      fullPath: '/auction/$pieceId'
+      preLoaderRoute: typeof AuctionPieceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/': {
+      id: '/explore/'
+      path: '/explore'
+      fullPath: '/explore/'
+      preLoaderRoute: typeof ExploreIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/$galleryId': {
+      id: '/explore/$galleryId'
+      path: '/explore/$galleryId'
+      fullPath: '/explore/$galleryId'
+      preLoaderRoute: typeof ExploreGalleryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator/_auth/dashboard': {
+      id: '/creator/_auth/dashboard'
+      path: '/dashboard'
+      fullPath: '/creator/dashboard'
+      preLoaderRoute: typeof CreatorAuthDashboardRouteImport
+      parentRoute: typeof CreatorRouteRoute
+    }
+    '/creator/_auth/nwc': {
+      id: '/creator/_auth/nwc'
+      path: '/nwc'
+      fullPath: '/creator/nwc'
+      preLoaderRoute: typeof CreatorAuthNwcRouteImport
+      parentRoute: typeof CreatorRouteRoute
+    }
+    '/creator/_auth/gallery/$galleryId': {
+      id: '/creator/_auth/gallery/$galleryId'
+      path: '/gallery/$galleryId'
+      fullPath: '/creator/gallery/$galleryId'
+      preLoaderRoute: typeof CreatorAuthGalleryGalleryIdRouteImport
+      parentRoute: typeof CreatorRouteRoute
+    }
+    '/creator/_auth/gallery/new': {
+      id: '/creator/_auth/gallery/new'
+      path: '/gallery/new'
+      fullPath: '/creator/gallery/new'
+      preLoaderRoute: typeof CreatorAuthGalleryNewRouteImport
+      parentRoute: typeof CreatorRouteRoute
+    }
   }
 }
 
+interface CreatorRouteRouteChildren {
+  CreatorAuthDashboardRoute: typeof CreatorAuthDashboardRoute
+  CreatorAuthNwcRoute: typeof CreatorAuthNwcRoute
+  CreatorAuthGalleryGalleryIdRoute: typeof CreatorAuthGalleryGalleryIdRoute
+  CreatorAuthGalleryNewRoute: typeof CreatorAuthGalleryNewRoute
+}
+
+const CreatorRouteRouteChildren: CreatorRouteRouteChildren = {
+  CreatorAuthDashboardRoute: CreatorAuthDashboardRoute,
+  CreatorAuthNwcRoute: CreatorAuthNwcRoute,
+  CreatorAuthGalleryGalleryIdRoute: CreatorAuthGalleryGalleryIdRoute,
+  CreatorAuthGalleryNewRoute: CreatorAuthGalleryNewRoute,
+}
+
+const CreatorRouteRouteWithChildren = CreatorRouteRoute._addFileChildren(
+  CreatorRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreatorRouteRoute: CreatorRouteRouteWithChildren,
+  AuctionPieceIdRoute: AuctionPieceIdRoute,
+  ExploreGalleryIdRoute: ExploreGalleryIdRoute,
+  ExploreIndexRoute: ExploreIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
