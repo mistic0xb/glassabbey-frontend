@@ -6,7 +6,7 @@ class WebSocketService {
   private isConnected = false
 
   public connect(brokerUrl: string, onConnectCallback?: () => void): void {
-    // FIX: if already connected, call callback immediately instead of returning silently
+    // if already connected, call callback immediately instead of returning silently
     if (this.client && this.isConnected) {
       onConnectCallback?.()
       return
@@ -50,7 +50,6 @@ class WebSocketService {
     })
   }
 
-  // FIX: was missing entirely
   public publish(destination: string, body: unknown): void {
     if (!this.client || !this.isConnected) {
       console.warn('STOMP client not connected, cannot publish')
