@@ -80,6 +80,13 @@ export function useAuction(initialAuction: AuctionDto) {
             setBidError(null)
             setIsSubmitting(false)
             break
+
+          case 'BID_OUTBID':
+            setPendingBid(null)
+            setBidError(`You were outbid. Current price is ${msg.currentPrice} sats. Please place a new bid.`)
+            setIsSubmitting(false)
+            break
+
           case 'BID_REJECTED':
             setBidError(msg.reason)
             setIsSubmitting(false)
